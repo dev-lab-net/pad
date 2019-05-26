@@ -3,7 +3,6 @@ package net.devlab.pad.api;
 import java.time.LocalDateTime;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -79,8 +78,7 @@ public class PadResource {
 
     @POST
     @Path("delete")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response deletePad(final @FormParam("id") String id) {
+    public Response deletePad(final @QueryParam("id") String id) {
         log.info("POST /api/v1/pad/delete id={}", id);
         Query<Pad> deleteQuery = datastore.createQuery(Pad.class)
                         .field("shaSum")
