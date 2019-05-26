@@ -12,12 +12,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
-import org.bson.types.ObjectId;
 
 import com.mongodb.MongoClient;
 
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
+import dev.morphia.query.Query;
+import dev.morphia.query.UpdateOperations;
 import lombok.extern.log4j.Log4j2;
 import net.devlab.pad.model.Pad;
 
@@ -36,14 +37,21 @@ public class PadResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPad(final @QueryParam("id") String id) {
+        log.info("GET /pad id=" + id);
         if (StringUtils.isBlank(id)) {
-            return Response.status(400, "no id provided").build();
+            return Response.status(400, "no pad provided").build();
         }
         final Pad pad = datastore.createQuery(Pad.class)
-                        .field("_id")
-                        .equal(new ObjectId(id))
+                        .field("shaSum")
+                        .equal(id)
                         .first();
         if (pad != null) {
+            Query<Pad> updateQuery = datastore.createQuery(Pad.class)
+                            .field("shaSum")
+                            .equal(id);
+            UpdateOperations<Pad> operations = datastore.createUpdateOperations(Pad.class)
+                            .set("views", 1 + pad.getViews());
+            datastore.update(updateQuery, operations);
             return Response.ok(pad).build();
         }
         return Response.status(400, "no such pad: " + id).build();
@@ -59,10 +67,7 @@ public class PadResource {
             pad.setAuthor("Anonymous");
         }
         if (StringUtils.isBlank(pad.getTitle())) {
-            pad.setTitle("Pad #" + pad.getPath());
-        }
-        if (StringUtils.isBlank(pad.getHighlight())) {
-            pad.setHighlight("txt");
+            pad.setTitle("Pad #" + pad.getShaSum());
         }
         if (StringUtils.isBlank(pad.getContent())) {
             return Response.status(400, "pad is empty").build();
