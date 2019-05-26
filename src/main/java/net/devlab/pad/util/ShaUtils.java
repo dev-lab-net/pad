@@ -30,11 +30,11 @@ public class ShaUtils {
 
     public static String sha256Sum(final Pad pad) {
         messageDigest.update(pad.getAuthor().getBytes());
-        if (pad.isTitled()) {
+        if (PadUtils.isTitled(pad)) {
             messageDigest.update(pad.getTitle().getBytes());
         }
         messageDigest.update(pad.getCreationDate().toString().getBytes());
-        if (pad.expires()) {
+        if (PadUtils.expires(pad)) {
             messageDigest.update(pad.getExpirationDate().toString().getBytes());
         }
         messageDigest.update(pad.getHighlight().getBytes());

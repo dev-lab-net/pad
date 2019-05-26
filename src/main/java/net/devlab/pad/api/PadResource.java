@@ -3,6 +3,7 @@ package net.devlab.pad.api;
 import java.time.LocalDateTime;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -37,7 +38,7 @@ public class PadResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPad(final @QueryParam("id") String id) {
-        log.info("GET /api/v1/pad id=" + id);
+        log.info("GET /api/v1/pad id={}", id);
         if (StringUtils.isBlank(id)) {
             return Response.status(400, "no pad provided").build();
         }
@@ -74,6 +75,18 @@ public class PadResource {
         }
         datastore.save(pad);
         return Response.ok(pad).build();
+    }
+
+    @POST
+    @Path("delete")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deletePad(final @FormParam("id") String id) {
+        log.info("POST /api/v1/pad/delete id={}", id);
+        Query<Pad> deleteQuery = datastore.createQuery(Pad.class)
+                        .field("shaSum")
+                        .equal(id);
+        datastore.delete(deleteQuery);
+        return Response.ok().build();
     }
 
     @GET

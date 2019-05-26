@@ -59,18 +59,10 @@ public class Pad implements Serializable {
         return shaSum;
     }
 
-    public boolean isTitled() {
-        return StringUtils.isNotBlank(title);
-    }
-
     public String getTitle() {
         if (StringUtils.isBlank(title)) {
             return "Pad #" + getShaSum();
         }
         return title;
-    }
-
-    public boolean expires() {
-        return expirationDate != null;
     }
 }
