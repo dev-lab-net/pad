@@ -15,7 +15,7 @@ import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
  */
 public class App {
 
-    private static final URI SERVER_URI = URI.create("http://localost:8080");
+    private static final URI SERVER_URI = URI.create("http://0.0.0.0:8080");
 
     public static void main(String[] args) throws Exception {
         Server server = JettyHttpContainerFactory.createServer(SERVER_URI, new AppConfig(), false);
