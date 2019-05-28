@@ -6,8 +6,8 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -35,8 +35,9 @@ public class PadResource {
     private static Datastore datastore = new Morphia().map(Pad.class).createDatastore(mongoClient, "Pads");
 
     @GET
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPad(final @QueryParam("id") String id) {
+    public Response getPad(final @PathParam("id") String id) {
         log.info("GET /api/v1/pad id={}", id);
         if (StringUtils.isBlank(id)) {
             return Response.status(400, "no pad provided").build();
@@ -77,9 +78,9 @@ public class PadResource {
     }
 
     @POST
-    @Path("delete")
-    public Response deletePad(final @QueryParam("id") String id) {
-        log.info("POST /api/v1/pad/delete id={}", id);
+    @Path("/{id}/delete")
+    public Response deletePad(final @PathParam("id") String id) {
+        log.info("POST /api/v1/pad/{}/delete", id);
         Query<Pad> deleteQuery = datastore.createQuery(Pad.class)
                         .field("shaSum")
                         .equal(id);
