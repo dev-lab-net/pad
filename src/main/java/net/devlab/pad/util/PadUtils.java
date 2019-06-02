@@ -31,4 +31,8 @@ public class PadUtils {
         final LocalDateTime now = LocalDateTime.now();
         return now.isAfter(pad.getExpirationDate());
     }
+
+    public static String getGenericTitle(Pad pad) {
+        return "Pad #" + pad.getHash();
+    }
 }

@@ -16,10 +16,12 @@ import net.devlab.pad.model.Pad;
 @Log4j2
 public class ShaUtils {
 
-    private static MessageDigest messageDigest;
+    private static MessageDigest sha1Digest;
+    private static MessageDigest sha256Digest;
     static {
         try {
-            messageDigest = MessageDigest.getInstance("SHA-256");
+            sha1Digest = MessageDigest.getInstance("SHA-1");
+            sha256Digest = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             log.catching(e);
         }
@@ -28,17 +30,17 @@ public class ShaUtils {
     private ShaUtils() {
     }
 
-    public static String sha256Sum(final Pad pad) {
-        messageDigest.update(pad.getAuthor().getBytes());
+    public static String sha1Sum(final Pad pad) {
+        sha1Digest.update(pad.getAuthor().getBytes());
         if (PadUtils.isTitled(pad)) {
-            messageDigest.update(pad.getTitle().getBytes());
+            sha1Digest.update(pad.getTitle().getBytes());
         }
-        messageDigest.update(pad.getCreationDate().toString().getBytes());
+        sha1Digest.update(pad.getCreationDate().toString().getBytes());
         if (PadUtils.expires(pad)) {
-            messageDigest.update(pad.getExpirationDate().toString().getBytes());
+            sha1Digest.update(pad.getExpirationDate().toString().getBytes());
         }
-        messageDigest.update(pad.getHighlight().getBytes());
-        messageDigest.update(pad.getContent().getBytes());
-        return Hex.encodeHexString(messageDigest.digest()).substring(0, 8);
+        sha1Digest.update(pad.getHighlight().getBytes());
+        sha1Digest.update(pad.getContent().getBytes());
+        return Hex.encodeHexString(sha1Digest.digest());
     }
 }

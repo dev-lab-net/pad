@@ -21,6 +21,7 @@ import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
 import lombok.extern.log4j.Log4j2;
 import net.devlab.pad.model.Pad;
+import net.devlab.pad.util.PadUtils;
 
 /**
  * 
@@ -40,22 +41,23 @@ public class PadResource {
     public Response getPad(final @PathParam("id") String id) {
         log.info("GET /api/v1/pad id={}", id);
         if (StringUtils.isBlank(id)) {
-            return Response.status(400, "no pad provided").build();
+            return Response.status(400, "No pad provided").build();
         }
-        final Pad pad = datastore.createQuery(Pad.class)
-                        .field("shaSum")
-                        .equal(id)
-                        .first();
+        final Query<Pad> query = datastore.createQuery(Pad.class)
+                .field("hash")
+                .startsWith(id);
+        final Pad pad = query.first();
         if (pad != null) {
-            Query<Pad> updateQuery = datastore.createQuery(Pad.class)
-                            .field("shaSum")
-                            .equal(id);
             UpdateOperations<Pad> operations = datastore.createUpdateOperations(Pad.class)
-                            .set("views", 1 + pad.getViews());
-            datastore.update(updateQuery, operations);
+                    .set("views", 1 + pad.getViews());
+            datastore.update(query, operations);
+            // give generic title
+            if (!PadUtils.isTitled(pad)) {
+                pad.setTitle(PadUtils.getGenericTitle(pad));
+            }
             return Response.ok(pad).build();
         }
-        return Response.status(400, "no such pad: " + id).build();
+        return Response.status(400, "Not Found: " + id).build();
     }
 
     @POST
@@ -67,11 +69,8 @@ public class PadResource {
         if (StringUtils.isBlank(pad.getAuthor())) {
             pad.setAuthor("Anonymous");
         }
-        if (StringUtils.isBlank(pad.getTitle())) {
-            pad.setTitle("Pad #" + pad.getShaSum());
-        }
         if (StringUtils.isBlank(pad.getContent())) {
-            return Response.status(400, "pad is empty").build();
+            return Response.status(400, "Pad is empty").build();
         }
         datastore.save(pad);
         return Response.ok(pad).build();
@@ -82,8 +81,8 @@ public class PadResource {
     public Response deletePad(final @PathParam("id") String id) {
         log.info("POST /api/v1/pad/{}/delete", id);
         Query<Pad> deleteQuery = datastore.createQuery(Pad.class)
-                        .field("shaSum")
-                        .equal(id);
+                .field("hash")
+                .startsWith(id);
         datastore.delete(deleteQuery);
         return Response.ok().build();
     }

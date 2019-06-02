@@ -26,7 +26,7 @@ public class Pad implements Serializable {
     @Id
     private ObjectId id;
     @Property
-    private String shaSum;
+    private String hash;
     @Property
     private String author;
     @Property
@@ -52,17 +52,14 @@ public class Pad implements Serializable {
         this.id = id;
     }
 
-    public String getShaSum() {
-        if (StringUtils.isEmpty(shaSum)) {
-            shaSum = ShaUtils.sha256Sum(this);
+    public String getHash() {
+        if (StringUtils.isEmpty(hash)) {
+            hash = ShaUtils.sha1Sum(this);
         }
-        return shaSum;
+        return hash;
     }
 
     public String getTitle() {
-        if (StringUtils.isBlank(title)) {
-            return "Pad #" + getShaSum();
-        }
         return title;
     }
 }
