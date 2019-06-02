@@ -72,6 +72,7 @@ public class PadResource {
         if (StringUtils.isBlank(pad.getContent())) {
             return Response.status(400, "Pad is empty").build();
         }
+        pad.computeHash();
         datastore.save(pad);
         return Response.ok(pad).build();
     }
