@@ -29,7 +29,7 @@ import net.devlab.pad.util.PadUtils;
  *
  */
 @Log4j2
-@Path("/v1/pad")
+@Path("/api/v1/pad")
 public class PadResource {
 
     private static MongoClient mongoClient = new MongoClient();
@@ -39,7 +39,7 @@ public class PadResource {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPad(final @PathParam("id") String id) {
-        log.info("GET /v1/pad id={}", id);
+        log.info("GET /api/v1/pad id={}", id);
         if (StringUtils.isBlank(id)) {
             return Response.status(400, "No pad provided").build();
         }
@@ -64,7 +64,7 @@ public class PadResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createPad(final Pad pad) {
-        log.info("POST /v1/pad");
+        log.info("POST /api/v1/pad");
         pad.setCreationDate(LocalDateTime.now());
         if (StringUtils.isBlank(pad.getAuthor())) {
             pad.setAuthor("Anonymous");
@@ -80,7 +80,7 @@ public class PadResource {
     @POST
     @Path("/{id}/delete")
     public Response deletePad(final @PathParam("id") String id) {
-        log.info("POST /v1/pad/{}/delete", id);
+        log.info("POST api//v1/pad/{}/delete", id);
         Query<Pad> deleteQuery = datastore.createQuery(Pad.class)
                 .field("hash")
                 .startsWith(id);
@@ -92,7 +92,7 @@ public class PadResource {
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPadList() {
-        log.info("GET /v1/pad/list");
+        log.info("GET /api/v1/pad/list");
         return Response.ok(datastore.createQuery(Pad.class).find().toList()).build();
     }
 }
