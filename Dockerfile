@@ -8,11 +8,8 @@ WORKDIR /opt/apps/pad
 # selectively add the POM file and
 # install dependencies
 COPY pom.xml /opt/apps/pad
-RUN mvn compile
-
-# rest of the project
 COPY src /opt/apps/pad/src
-RUN mvn package
+RUN mvn compile
 
 # local application port
 EXPOSE 10000
