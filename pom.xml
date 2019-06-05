@@ -17,6 +17,8 @@
 				<configuration>
 					<archive>
 						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>src</classpathPrefix>
 							<mainClass>net.devlab.pad.App</mainClass>
 						</manifest>
 					</archive>
