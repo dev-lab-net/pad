@@ -29,7 +29,7 @@ import net.devlab.pad.util.PadUtils;
  *
  */
 @Log4j2
-@Path("/api/v1/pad")
+@Path("/v1/pad")
 public class PadResource {
 
     private static MongoClient mongoClient = new MongoClient();
