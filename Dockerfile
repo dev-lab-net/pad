@@ -9,10 +9,10 @@ WORKDIR /opt/apps/pad
 # install dependencies
 COPY pom.xml /opt/apps/pad
 COPY src /opt/apps/pad/src
-RUN mvn compile
+RUN mvn install
 
 # local application port
 EXPOSE 10000
 
 # execute it
-CMD ["mvn", "exec:java"]
+CMD ["java", "-jar", "target/pad-jar-with-dependencies.jar"]
