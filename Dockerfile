@@ -8,14 +8,14 @@ WORKDIR /opt/apps/pad
 # selectively add the POM file and
 # install dependencies
 COPY pom.xml /opt/apps/pad
-RUN mvn install
+RUN mvn compile
 
 # rest of the project
 COPY src /opt/apps/pad/src
 RUN mvn package
 
 # local application port
-EXPOSE 8080
+EXPOSE 10000
 
 # execute it
 CMD ["mvn", "exec:java"]

@@ -1,6 +1,8 @@
 package net.devlab.pad;
 
+import java.io.InputStream;
 import java.net.URI;
+import java.util.Properties;
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -8,17 +10,31 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 
+import lombok.extern.log4j.Log4j2;
+
 /**
  * 
  * @author dj0n1
  *
  */
+@Log4j2
 public class App {
 
-    private static final URI SERVER_URI = URI.create("http://0.0.0.0:8080");
+    private static URI getURI() {
+        Properties properties = new Properties();
+        try (InputStream inputStream = ClassLoader.getSystemResourceAsStream("app.properties")) {
+            properties.load(inputStream);
+        } catch (Exception e) {
+            log.catching(e);
+            System.exit(0);
+        }
+        final String uriString = String.format("%s:%s", properties.get("app.host"), properties.get("app.port"));
+        return URI.create(uriString);
+    }
 
     public static void main(String[] args) throws Exception {
-        Server server = JettyHttpContainerFactory.createServer(SERVER_URI, new AppConfig(), false);
+        final URI uri = getURI();
+        final Server server = JettyHttpContainerFactory.createServer(uri, new AppConfig(), false);
         final Handler baseHandler = server.getHandler();
         final ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setDirectoriesListed(true);
