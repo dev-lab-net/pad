@@ -9,7 +9,7 @@
 	</Appenders>
 	
 	<Loggers>
-		<Logger name="org.eclipse.jetty" level="info" />
+		<Logger name="org.eclipse.jetty" level="debug" />
 		<Root level="info">
 			<AppenderRef ref="Console" />
 		</Root>
