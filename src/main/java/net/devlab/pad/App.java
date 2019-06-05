@@ -4,10 +4,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Properties;
 
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 
 import lombok.extern.log4j.Log4j2;
@@ -35,15 +32,6 @@ public class App {
     public static void main(String[] args) throws Exception {
         final URI uri = getURI();
         final Server server = JettyHttpContainerFactory.createServer(uri, new AppConfig(), false);
-        final Handler baseHandler = server.getHandler();
-        final ResourceHandler resourceHandler = new ResourceHandler();
-        resourceHandler.setDirectoriesListed(true);
-        resourceHandler.setWelcomeFiles(new String[] { "index.html" });
-        resourceHandler.setResourceBase("src/main/webapp");
-        final HandlerList handlers = new HandlerList();
-        handlers.addHandler(resourceHandler);
-        handlers.addHandler(baseHandler);
-        server.setHandler(handlers);
         server.start();
         server.join();
     }
