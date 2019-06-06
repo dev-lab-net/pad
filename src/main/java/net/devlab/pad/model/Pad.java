@@ -46,7 +46,6 @@ public class Pad implements Serializable {
 
     public Pad() {
         setId(new ObjectId());
-        setHighlight("txt");
     }
 
     private Pad(ObjectId id, String hash, String partialHash, String author, String title,
