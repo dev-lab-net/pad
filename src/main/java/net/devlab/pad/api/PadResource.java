@@ -55,7 +55,7 @@ public class PadResource {
             if (!PadUtils.isTitled(pad)) {
                 pad.setTitle(PadUtils.getGenericTitle(pad));
             }
-            return Response.ok(pad).build();
+            return Response.ok(pad.getPartialHash()).build();
         }
         return Response.status(400, "Not Found: " + id).build();
     }
