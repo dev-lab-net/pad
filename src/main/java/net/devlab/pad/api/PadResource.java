@@ -81,7 +81,7 @@ public class PadResource {
 
     @POST
     @Path("/form")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createFormDataPad(@FormParam("author") String author,
             @FormParam("title") String title,
