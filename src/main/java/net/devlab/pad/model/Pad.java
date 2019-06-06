@@ -9,6 +9,7 @@ import org.bson.types.ObjectId;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
+import lombok.Builder;
 import lombok.Data;
 import net.devlab.pad.util.ShaUtils;
 
@@ -18,6 +19,7 @@ import net.devlab.pad.util.ShaUtils;
  *
  */
 @Data
+@Builder
 @Entity
 public class Pad implements Serializable {
 
@@ -45,6 +47,20 @@ public class Pad implements Serializable {
     public Pad() {
         setId(new ObjectId());
         setHighlight("txt");
+    }
+
+    private Pad(ObjectId id, String hash, String partialHash, String author, String title,
+            LocalDateTime creationDate, LocalDateTime expirationDate, int views, String highlight, String content) {
+        setId(id);
+        setHash(hash);
+        setPartialHash(partialHash);
+        setAuthor(author);
+        setTitle(title);
+        setCreationDate(creationDate);
+        setExpirationDate(expirationDate);
+        setViews(views);
+        setHighlight(highlight);
+        setContent(content);
     }
 
     public void computeHash() {

@@ -3,6 +3,7 @@ package net.devlab.pad.api;
 import java.time.LocalDateTime;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -61,10 +62,11 @@ public class PadResource {
     }
 
     @POST
+    @Path("/json")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createPad(final Pad pad) {
-        log.info("POST /api/v1/pad");
+    public Response createJsonPad(final Pad pad) {
+        log.info("POST /api/v1/pad/json");
         pad.setCreationDate(LocalDateTime.now());
         if (StringUtils.isBlank(pad.getAuthor())) {
             pad.setAuthor("Anonymous");
@@ -72,6 +74,31 @@ public class PadResource {
         if (StringUtils.isBlank(pad.getContent())) {
             return Response.status(400, "Pad is empty").build();
         }
+        pad.computeHash();
+        datastore.save(pad);
+        return Response.ok(pad).build();
+    }
+
+    @POST
+    @Path("/form")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createFormDataPad(@FormParam("author") String author,
+            @FormParam("title") String title,
+            @FormParam("content") String content,
+            @FormParam("highlight") String highlight) {
+        log.info("POST /api/v1/pad/form");
+        if (StringUtils.isBlank(author)) {
+            author = "Anonymous";
+        }
+        if (StringUtils.isBlank(content)) {
+            return Response.status(400, "Pad is empty").build();
+        }
+        final Pad pad = Pad.builder()
+                .author(author)
+                .title(title)
+                .content(content)
+                .highlight(highlight)
+                .creationDate(LocalDateTime.now()).build();
         pad.computeHash();
         datastore.save(pad);
         return Response.ok(pad).build();
