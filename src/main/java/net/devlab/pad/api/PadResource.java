@@ -62,7 +62,7 @@ public class PadResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     public Response createJsonPad(final Pad pad) {
         log.info("POST /api/v1/pad");
         pad.setCreationDate(LocalDateTime.now());
