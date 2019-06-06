@@ -3,6 +3,9 @@ package net.devlab.pad.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import javax.json.bind.annotation.JsonbCreator;
+import javax.json.bind.annotation.JsonbPropertyOrder;
+
 import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
 
@@ -21,6 +24,18 @@ import net.devlab.pad.util.ShaUtils;
 @Data
 @Builder
 @Entity
+@JsonbPropertyOrder({
+        "id",
+        "hash",
+        "partialHash",
+        "author",
+        "title",
+        "creationDate",
+        "expirationDate",
+        "views",
+        "highlight",
+        "content"
+})
 public class Pad implements Serializable {
 
     @Id
@@ -49,7 +64,8 @@ public class Pad implements Serializable {
         setHighlight("txt");
     }
 
-    private Pad(ObjectId id, String hash, String partialHash, String author, String title,
+    @JsonbCreator
+    public Pad(ObjectId id, String hash, String partialHash, String author, String title,
             LocalDateTime creationDate, LocalDateTime expirationDate, int views, String highlight, String content) {
         setId(id);
         setHash(hash);
