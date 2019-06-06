@@ -91,6 +91,9 @@ public class PadResource {
         if (StringUtils.isBlank(author)) {
             author = "Anonymous";
         }
+        if (StringUtils.isBlank(highlight)) {
+            highlight = "txt";
+        }
         if (StringUtils.isBlank(content)) {
             return Response.status(400, "Pad is empty").build();
         }
