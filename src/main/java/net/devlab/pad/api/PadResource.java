@@ -82,7 +82,6 @@ public class PadResource {
     @POST
     @Path("/form")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response createFormDataPad(@FormParam("author") String author,
             @FormParam("title") String title,
             @FormParam("content") String content,
@@ -102,10 +101,11 @@ public class PadResource {
                 .title(title)
                 .content(content)
                 .highlight(highlight)
-                .creationDate(LocalDateTime.now()).build();
+                .creationDate(LocalDateTime.now())
+                .build();
         pad.computeHash();
         datastore.save(pad);
-        return Response.ok(pad).build();
+        return Response.ok(pad.getPartialHash()).build();
     }
 
     @POST
